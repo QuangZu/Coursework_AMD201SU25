@@ -1,0 +1,6 @@
+@Coursework_AMD201SU25_HostAddress = http://localhost:5196
+
+GET {{Coursework_AMD201SU25_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
