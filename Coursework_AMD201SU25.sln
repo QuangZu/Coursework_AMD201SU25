@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coursework_AMD201SU25", "Coursework_AMD201SU25\Coursework_AMD201SU25.csproj", "{1CFBBB97-EC45-4E1E-8162-CB69DBE369C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShorteningService", "URLShorteningService\URLShorteningService.csproj", "{B575A003-F44B-4CC7-A3CA-7E879F34AD56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotGateway", "OcelotGateway\OcelotGateway.csproj", "{12AF82D1-71A2-4549-BFF7-136375CDCD61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedirectService", "RedirectService\RedirectService.csproj", "{3EAD2A7F-1F94-4DB0-A92E-4D50D93299F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1CFBBB97-EC45-4E1E-8162-CB69DBE369C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1CFBBB97-EC45-4E1E-8162-CB69DBE369C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1CFBBB97-EC45-4E1E-8162-CB69DBE369C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1CFBBB97-EC45-4E1E-8162-CB69DBE369C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B575A003-F44B-4CC7-A3CA-7E879F34AD56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B575A003-F44B-4CC7-A3CA-7E879F34AD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B575A003-F44B-4CC7-A3CA-7E879F34AD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B575A003-F44B-4CC7-A3CA-7E879F34AD56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12AF82D1-71A2-4549-BFF7-136375CDCD61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12AF82D1-71A2-4549-BFF7-136375CDCD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12AF82D1-71A2-4549-BFF7-136375CDCD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12AF82D1-71A2-4549-BFF7-136375CDCD61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EAD2A7F-1F94-4DB0-A92E-4D50D93299F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EAD2A7F-1F94-4DB0-A92E-4D50D93299F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EAD2A7F-1F94-4DB0-A92E-4D50D93299F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EAD2A7F-1F94-4DB0-A92E-4D50D93299F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
