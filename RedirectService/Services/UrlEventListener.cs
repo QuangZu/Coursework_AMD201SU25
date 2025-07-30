@@ -5,6 +5,7 @@ using RabbitMQ.Client.Events;
 using StackExchange.Redis;
 using System.Text;
 using System.Text.Json;
+using RedirectService.Model;
 
 public class UrlEventListener : BackgroundService
 {
@@ -45,7 +46,7 @@ public class UrlEventListener : BackgroundService
             var message = Encoding.UTF8.GetString(body);
 
             // Expected message: { "short_url": "abc123", "long_url": "https://example.com" }
-            var url = JsonSerializer.Deserialize<UrlEvent>(message);
+            var url = JsonSerializer.Deserialize<Redirect>(message);
 
             if (url != null)
             {
@@ -64,9 +65,4 @@ public class UrlEventListener : BackgroundService
         base.Dispose();
     }
 
-    private class UrlEvent
-    {
-        public string short_url { get; set; } = string.Empty;
-        public string long_url { get; set; } = string.Empty;
-    }
 }

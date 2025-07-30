@@ -1,12 +1,15 @@
-﻿{
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8000"
+  },
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/shorten",
+      "DownstreamPathTemplate": "/api/URLShortening/shorten",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "shortening",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/shorten",
@@ -17,15 +20,12 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "redirect",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/{shortCode}",
       "UpstreamHttpMethod": [ "GET" ]
     }
-  ],
-  "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:8000"
-  }
+  ]
 }

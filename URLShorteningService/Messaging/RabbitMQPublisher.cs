@@ -1,4 +1,4 @@
-﻿using RabbitMQ.Client;
+using RabbitMQ.Client;
 using System.Text;
 
 public class RabbitMQPublisher
@@ -16,8 +16,8 @@ public class RabbitMQPublisher
         {
             HostName = _config["RabbitMQ:Host"],
             Port = int.Parse(_config["RabbitMQ:Port"] ?? "5672"),
-            UserName = _config["RabbitMQ:guest"],
-            Password = _config["RabbitMQ:guest"]
+            UserName = _config["RabbitMQ:Username"],
+            Password = _config["RabbitMQ:Password"]
         };
 
         using var connection = factory.CreateConnection();

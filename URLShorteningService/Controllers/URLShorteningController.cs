@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,6 +26,7 @@ namespace URLShorteningService.Controllers
             _publisher = publisher;
         }
 
+        [EnableRateLimiting("Fixed")]
         [HttpPost("shorten")]
         public async Task<IActionResult> ShortenUrl([FromBody] UrlRequest request)
         {
@@ -44,7 +46,8 @@ namespace URLShorteningService.Controllers
 
             // Cache and Publish
             await _cache.SetCacheAsync(shortCode, request.LongUrl);
-            _publisher.Publish($"Shortened: {shortCode} => {request.LongUrl}");
+            var message = System.Text.Json.JsonSerializer.Serialize(new { short_url = shortCode, long_url = request.LongUrl });
+            _publisher.Publish(message);
 
             return Ok(new { short_url = shortCode });
         }

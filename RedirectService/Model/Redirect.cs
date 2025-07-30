@@ -2,6 +2,7 @@
 {
     public class Redirect
     {
-        public int Id { get; set; }
+        public string short_url { get; set; } = string.Empty;
+        public string long_url { get; set; } = string.Empty;
     }
 }
