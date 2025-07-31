@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -7,92 +7,74 @@
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or
-          <a href="#" @click.prevent="toggleMode" class="font-medium text-blue-600 hover:text-blue-500">
-            {{ isLogin ? 'create a new account' : 'sign in to existing account' }}
+          <a href="#" @click="showRegister = !showRegister" class="font-medium text-indigo-600 hover:text-indigo-500">
+            {{ showRegister ? 'sign in to existing account' : 'create a new account' }}
           </a>
         </p>
       </div>
       
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div class="rounded-md shadow-sm -space-y-px">
-          <div v-if="!isLogin">
-            <label for="name" class="sr-only">Full Name</label>
+          <div>
+            <label for="username" class="sr-only">Username</label>
             <input
-              id="name"
-              name="name"
+              id="username"
+              v-model="form.username"
+              name="username"
               type="text"
-              v-model="form.name"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-              placeholder="Full Name"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="Username"
             />
           </div>
-          
-          <div>
+          <div v-if="showRegister">
             <label for="email" class="sr-only">Email address</label>
             <input
               id="email"
+              v-model="form.email"
               name="email"
               type="email"
-              v-model="form.email"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-              :class="{ 'rounded-t-md': isLogin, 'rounded-none': !isLogin }"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
             />
           </div>
-          
           <div>
             <label for="password" class="sr-only">Password</label>
             <input
               id="password"
+              v-model="form.password"
               name="password"
               type="password"
-              v-model="form.password"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
             />
           </div>
         </div>
 
-        <div class="flex items-center justify-between" v-if="isLogin">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              v-model="form.remember"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
-          </div>
+        <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {{ error }}
+        </div>
 
-          <div class="text-sm">
-            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-              Forgot your password?
-            </a>
-          </div>
+        <div v-if="success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+          {{ success }}
         </div>
 
         <div>
           <button
             type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+            :disabled="isLoading"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
           >
-            {{ isLogin ? 'Sign in' : 'Create Account' }}
+            <span v-if="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+            {{ showRegister ? 'Register' : 'Sign in' }}
           </button>
-        </div>
-        
-        <div class="text-center">
-          <RouterLink 
-            to="/" 
-            class="text-blue-600 hover:text-blue-500 text-sm font-medium"
-          >
-            Back to Home
-          </RouterLink>
         </div>
       </form>
     </div>
@@ -104,29 +86,58 @@ export default {
   name: 'LoginPage',
   data() {
     return {
-      isLogin: true,
+      showRegister: false,
+      isLoading: false,
+      error: '',
+      success: '',
       form: {
-        name: '',
+        username: '',
         email: '',
-        password: '',
-        remember: false
+        password: ''
       }
     }
   },
   methods: {
-    toggleMode() {
-      this.isLogin = !this.isLogin
-      this.form = {
-        name: '',
-        email: '',
-        password: '',
-        remember: false
+    async handleSubmit() {
+      this.isLoading = true
+      this.error = ''
+      this.success = ''
+
+      try {
+        const endpoint = this.showRegister ? '/auth/register' : '/auth/login'
+        const response = await fetch(`http://localhost:8000${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.form)
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'An error occurred')
+        }
+
+        // Store token and user info
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        
+        this.success = this.showRegister ? 'Registration successful! Redirecting...' : 'Login successful! Redirecting...'
+        
+        // Emit login event to parent components
+        this.$emit('user-logged-in', data.user)
+        
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 1500)
+
+      } catch (error) {
+        this.error = error.message
+      } finally {
+        this.isLoading = false
       }
-    },
-    handleSubmit() {
-      // Handle form submission here
-      console.log('Form submitted:', this.form)
-      alert(`${this.isLogin ? 'Login' : 'Registration'} form submitted! Check console for details.`)
     }
   }
 }

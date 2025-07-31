@@ -13,7 +13,7 @@
         }
       ],
       "UpstreamPathTemplate": "/shorten",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ]
     },
     {
       "DownstreamPathTemplate": "/{shortCode}",
@@ -26,6 +26,18 @@
       ],
       "UpstreamPathTemplate": "/{shortCode}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "auth",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "OPTIONS" ]
     }
   ]
 }

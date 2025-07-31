@@ -10,6 +10,21 @@ services:
       - rabbitmq
       - redis
 
+  auth:
+    build: ./AuthService
+    ports:
+      - "5003:5001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=idontknow
+    depends_on:
+      - postgres
+
   gateway:
     build: ./OcelotGateway
     ports:
@@ -19,6 +34,7 @@ services:
     depends_on:
       - shortening
       - redirect
+      - auth
 
   postgres:
     image: postgres:15
@@ -40,7 +56,7 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   redirect:
     build: ./RedirectService

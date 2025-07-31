@@ -26,6 +26,16 @@ namespace URLShorteningService.Controllers
             _publisher = publisher;
         }
 
+        [HttpOptions("shorten")]
+        public IActionResult ShortenUrlOptions()
+        {
+            // Handle CORS preflight request
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Response.Headers.Add("Access-Control-Allow-Methods", "POST, OPTIONS");
+            Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+            return Ok();
+        }
+
         [EnableRateLimiting("Fixed")]
         [HttpPost("shorten")]
         public async Task<IActionResult> ShortenUrl([FromBody] UrlRequest request)
@@ -33,7 +43,25 @@ namespace URLShorteningService.Controllers
             if (string.IsNullOrWhiteSpace(request.LongUrl))
                 return BadRequest("URL is required.");
 
-            var shortCode = GenerateShortCode(request.LongUrl);
+            string shortCode;
+
+            // Check if custom alias is provided
+            if (!string.IsNullOrWhiteSpace(request.CustomAlias))
+            {
+                shortCode = request.CustomAlias;
+                
+                // Check if custom alias already exists
+                var existingUrl = await _context.URLs.FirstOrDefaultAsync(u => u.short_url == shortCode);
+                if (existingUrl != null)
+                {
+                    return BadRequest("Custom alias already exists. Please choose a different one.");
+                }
+            }
+            else
+            {
+                // Generate random short code
+                shortCode = GenerateShortCode(request.LongUrl);
+            }
 
             var entity = new URLShortening
             {
@@ -66,5 +94,6 @@ namespace URLShorteningService.Controllers
     public class UrlRequest
     {
         public string LongUrl { get; set; } = string.Empty;
+        public string? CustomAlias { get; set; }
     }
 }

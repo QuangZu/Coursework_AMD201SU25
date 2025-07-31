@@ -30,9 +30,27 @@
           </div>
         </div>
 
-        <!-- Login/Register -->
+        <!-- User Menu / Login -->
         <div class="hidden md:block">
+          <!-- Logged In User -->
+          <div v-if="user" class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span class="text-white text-sm font-medium">{{ userInitials }}</span>
+              </div>
+              <span class="text-gray-700 text-sm font-medium">{{ user.username }}</span>
+            </div>
+            <button
+              @click="logout"
+              class="text-gray-500 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            >
+              Logout
+            </button>
+          </div>
+          
+          <!-- Not Logged In -->
           <RouterLink
+            v-else
             to="/login"
             class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
           >
@@ -72,7 +90,26 @@
           >
             About
           </RouterLink>
+          
+          <!-- Mobile User Menu -->
+          <div v-if="user" class="border-t border-gray-200 pt-4 mt-4">
+            <div class="flex items-center space-x-3 px-3 py-2">
+              <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <span class="text-white text-sm font-medium">{{ userInitials }}</span>
+              </div>
+              <span class="text-gray-700 text-base font-medium">{{ user.username }}</span>
+            </div>
+            <button
+              @click="logout"
+              class="text-red-600 hover:text-red-700 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+            >
+              Logout
+            </button>
+          </div>
+          
+          <!-- Mobile Login -->
           <RouterLink
+            v-else
             to="/login"
             class="bg-blue-600 text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium"
             @click="mobileMenuOpen = false"
@@ -88,9 +125,39 @@
 <script>
 export default {
   name: 'NavBar',
+  props: {
+    user: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
       mobileMenuOpen: false
+    }
+  },
+  computed: {
+    userInitials() {
+      if (!this.user || !this.user.username) return '?'
+      return this.user.username
+        .split(' ')
+        .map(name => name.charAt(0))
+        .join('')
+        .toUpperCase()
+        .substring(0, 2)
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+      this.$emit('user-logged-out')
+      this.mobileMenuOpen = false
+      
+      // Redirect to home page
+      if (this.$route.path !== '/') {
+        this.$router.push('/')
+      }
     }
   }
 }

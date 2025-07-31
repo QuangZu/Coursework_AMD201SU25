@@ -9,6 +9,17 @@ namespace RedirectService
 
             // Add services to the container.
 
+            // Add CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddHostedService<UrlEventListener>();
@@ -26,8 +37,10 @@ namespace RedirectService
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            // Use CORS before authorization
+            app.UseCors("AllowAll");
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

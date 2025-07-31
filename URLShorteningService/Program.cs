@@ -19,6 +19,18 @@ namespace URLShorteningService
                 options.Configuration = builder.Configuration.GetConnectionString("Redis");
                 options.InstanceName = "Shortener:";
             });
+
+            // Add CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddRateLimiter(options =>
             {
                 options.AddFixedWindowLimiter("Fixed", opt =>
@@ -53,6 +65,9 @@ namespace URLShorteningService
             }
 
             app.UseHttpsRedirection();
+
+            // Use CORS before authorization
+            app.UseCors("AllowAll");
 
             app.UseAuthorization();
 

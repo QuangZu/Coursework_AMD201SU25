@@ -52,7 +52,6 @@
             </div>
             <div class="mt-4 text-sm text-gray-600">
               <p><strong>Original URL:</strong> {{ longUrl }}</p>
-              <p><strong>Clicks:</strong> 0 (Track your link performance)</p>
             </div>
           </div>
 
@@ -102,6 +101,31 @@
               </button>
             </div>
           </form>
+
+          <!-- Result Display for Custom Alias -->
+          <div v-if="customShortUrl" class="mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
+            <h3 class="text-lg font-semibold text-green-800 mb-3">Your shortened URL:</h3>
+            <div class="flex items-center justify-between bg-white p-4 rounded-lg border">
+              <a :href="customShortUrl" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium break-all">
+                {{ customShortUrl }}
+              </a>
+              <button
+                @click="copyCustomToClipboard"
+                class="ml-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex-shrink-0"
+              >
+                {{ customCopied ? 'Copied!' : 'Copy' }}
+              </button>
+            </div>
+            <div class="mt-4 text-sm text-gray-600">
+              <p><strong>Original URL:</strong> {{ longUrl }}</p>
+            </div>
+          </div>
+
+          <!-- Error Display for Custom Alias -->
+          <div v-if="error" class="mt-8 p-6 bg-red-50 border border-red-200 rounded-xl">
+            <h3 class="text-lg font-semibold text-red-800 mb-2">Error:</h3>
+            <p class="text-red-600">{{ error }}</p>
+          </div>
         </div>
         <!-- Features Section -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
@@ -155,8 +179,10 @@ export default {
       longUrl: '',
       shortUrl: '',
       customAlias: '',
+      customShortUrl: '', // New variable for custom alias results
       isLoading: false,
       copied: false,
+      customCopied: false, // New variable for custom alias copy state
       error: '',
       systemDomain: 'http://localhost:8000' // Fixed system domain - matches your Ocelot Gateway
     }
@@ -189,7 +215,7 @@ export default {
         }
 
         const data = await response.json()
-        this.shortUrl = data.shortUrl || `${this.systemDomain}/${data.shortCode}`
+        this.shortUrl = data.short_url ? `${this.systemDomain}/${data.short_url}` : data.shortUrl
 
       } catch (error) {
         console.error('Error shortening URL:', error)
@@ -222,6 +248,29 @@ export default {
       }
     },
 
+    async copyCustomToClipboard() {
+      try {
+        await navigator.clipboard.writeText(this.customShortUrl)
+        this.customCopied = true
+        setTimeout(() => {
+          this.customCopied = false
+        }, 2000)
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error)
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea')
+        textArea.value = this.customShortUrl
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textArea)
+        this.customCopied = true
+        setTimeout(() => {
+          this.customCopied = false
+        }, 2000)
+      }
+    },
+
     async shortenUrlWithAlias() {
       if (!this.longUrl.trim()) {
         this.error = 'Please enter a valid URL'
@@ -235,7 +284,7 @@ export default {
 
       this.isLoading = true
       this.error = ''
-      this.shortUrl = ''
+      this.customShortUrl = ''
 
       try {
         // Call your URL shortening API with custom alias through Ocelot Gateway
@@ -255,7 +304,7 @@ export default {
         }
 
         await response.json() // Consume the response
-        this.shortUrl = `${this.systemDomain}/${this.customAlias}`
+        this.customShortUrl = `${this.systemDomain}/${this.customAlias}`
 
       } catch (error) {
         console.error('Error shortening URL:', error)
