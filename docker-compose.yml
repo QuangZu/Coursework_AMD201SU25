@@ -10,8 +10,8 @@ services:
       - rabbitmq
       - redis
 
-  auth:
-    build: ./AuthService
+  user:
+    build: ./UserService
     ports:
       - "5003:5001"
     environment:
@@ -34,7 +34,7 @@ services:
     depends_on:
       - shortening
       - redirect
-      - auth
+      - user
 
   postgres:
     image: postgres:15

@@ -55,7 +55,7 @@ Authorization: Bearer <token>
 
 ### 1. Install Dependencies
 ```bash
-cd AuthService
+cd UserService
 npm install
 ```
 

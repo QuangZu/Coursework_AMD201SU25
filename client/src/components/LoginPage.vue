@@ -104,7 +104,7 @@ export default {
       this.success = ''
 
       try {
-        const endpoint = this.showRegister ? '/auth/register' : '/auth/login'
+        const endpoint = this.showRegister ? '/user/register' : '/user/login'
         const response = await fetch(`http://localhost:8000${endpoint}`, {
           method: 'POST',
           headers: {
