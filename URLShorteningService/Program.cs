@@ -44,6 +44,7 @@ namespace URLShorteningService
 
             builder.Services.AddSingleton<RedisCacheService>();
             builder.Services.AddSingleton<RabbitMQPublisher>();
+            builder.Services.AddHttpClient();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

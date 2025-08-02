@@ -8,5 +8,6 @@ const UserController = require('../controllers/userController');
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 router.get('/profile', authenticateToken, UserController.getProfile);
+router.post('/history', UserController.addToHistory);
 
 module.exports = router;

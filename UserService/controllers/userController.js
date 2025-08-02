@@ -66,7 +66,7 @@ const login = async (req, res) => {
     }
 };
 
-// Get user profile
+// Get user profile with history
 const getProfile = async (req, res) => {
     try {
         const user = await pool.query('SELECT id, username, email, created_at FROM users WHERE id = $1', [req.user.userId]);
@@ -74,8 +74,15 @@ const getProfile = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
         
+        // Get user's URL history
+        const history = await pool.query(
+            'SELECT long_url, short_url, created_at FROM url_history WHERE user_id = $1 ORDER BY created_at DESC',
+            [req.user.userId]
+        );
+        
         res.status(200).json({
-            user: user.rows[0]
+            user: user.rows[0],
+            history: history.rows
         });
     } catch (error) {
         console.error('Error getting user profile:', error);
@@ -83,8 +90,31 @@ const getProfile = async (req, res) => {
     }
 };
 
+// Add URL to user history
+const addToHistory = async (req, res) => {
+    try {
+        const { userId, longUrl, shortUrl, createdAt } = req.body;
+        
+        if (!userId || !longUrl || !shortUrl) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        // Insert into history table
+        await pool.query(
+            'INSERT INTO url_history (user_id, long_url, short_url, created_at) VALUES ($1, $2, $3, $4)',
+            [userId, longUrl, shortUrl, createdAt || new Date()]
+        );
+        
+        res.status(201).json({ message: 'URL added to history successfully' });
+    } catch (error) {
+        console.error('Error adding URL to history:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 module.exports = {
     register,
     login,
-    getProfile
+    getProfile,
+    addToHistory
 };

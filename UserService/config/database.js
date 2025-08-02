@@ -25,7 +25,18 @@ const connectDB = async () => {
       );
     `);
     
-    console.log('✅ Users table ready');
+    // Create url_history table if it doesn't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS url_history (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        long_url TEXT NOT NULL,
+        short_url VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    
+    console.log('✅ Users and URL history tables ready');
     client.release();
   } catch (error) {
     console.error('❌ Database connection failed:', error);
@@ -33,4 +44,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = { pool, connectDB }; 
+module.exports = { pool, connectDB };

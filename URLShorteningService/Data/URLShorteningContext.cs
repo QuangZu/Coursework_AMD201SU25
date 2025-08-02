@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using URLShorteningService.Models;
 
 namespace URLShorteningService.Data
