@@ -5,7 +5,7 @@
         <!-- Logo -->
         <div class="flex-shrink-0">
           <RouterLink to="/" class="flex items-center">
-            <img src="../../assets/logo.png" alt="Logo" class="h-8 w-auto" />
+            <img src="../../assets/link_icon.png" alt="Logo" class="h-8 w-auto" />
             <span class="ml-2 text-xl font-bold text-gray-800">ShortLink</span>
           </RouterLink>
         </div>
