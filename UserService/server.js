@@ -31,6 +31,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`🔍 ${req.method} ${req.path} - Body:`, JSON.stringify(req.body, null, 2));
+  next();
+});
+
 // Routes
 app.use('/api/user', userRoutes);
 

@@ -116,7 +116,7 @@ namespace URLShorteningService.Controllers
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Send request to UserService through OcelotGateway
-                var response = await _httpClient.PostAsync("http://localhost:8000/user/history", content);
+                var response = await _httpClient.PostAsync("http://gateway:8080/user/history", content);
                 
                 if (!response.IsSuccessStatusCode)
                 {

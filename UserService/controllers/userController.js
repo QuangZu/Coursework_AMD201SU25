@@ -93,21 +93,30 @@ const getProfile = async (req, res) => {
 // Add URL to user history
 const addToHistory = async (req, res) => {
     try {
+        console.log('📝 AddToHistory received data:', JSON.stringify(req.body, null, 2));
+
         const { userId, longUrl, shortUrl, createdAt } = req.body;
-        
+
+        console.log('📝 Extracted values:', { userId, longUrl, shortUrl, createdAt });
+
         if (!userId || !longUrl || !shortUrl) {
+            console.log('❌ Missing required fields:', { userId: !!userId, longUrl: !!longUrl, shortUrl: !!shortUrl });
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
+
+        console.log('📝 Inserting into database...');
+
         // Insert into history table
-        await pool.query(
-            'INSERT INTO url_history (user_id, long_url, short_url, created_at) VALUES ($1, $2, $3, $4)',
+        const result = await pool.query(
+            'INSERT INTO url_history (user_id, long_url, short_url, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
             [userId, longUrl, shortUrl, createdAt || new Date()]
         );
-        
+
+        console.log('✅ Successfully inserted into history:', result.rows[0]);
+
         res.status(201).json({ message: 'URL added to history successfully' });
     } catch (error) {
-        console.error('Error adding URL to history:', error);
+        console.error('❌ Error adding URL to history:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
