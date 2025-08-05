@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
-  console.log(`🔍 ${req.method} ${req.path} - Body:`, JSON.stringify(req.body, null, 2));
+      console.log(`${req.method} ${req.path} - Body:`, JSON.stringify(req.body, null, 2));
   next();
 });
 
@@ -64,8 +64,8 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`🚀 Auth Service running on port ${PORT}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/health`);
+      console.log(`Auth Service running on port ${PORT}`);
+console.log(`Health check: http://localhost:${PORT}/health`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

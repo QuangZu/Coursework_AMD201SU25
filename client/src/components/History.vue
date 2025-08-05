@@ -251,7 +251,7 @@ export default {
       // This is a placeholder for future implementation
       if (confirm('Are you sure you want to delete this URL from your history?')) {
         this.history.splice(index, 1)
-        // TODO: Call backend API to delete from database
+        // Remove item from local array (backend deletion not implemented yet)
       }
     },
 

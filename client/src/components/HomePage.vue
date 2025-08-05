@@ -186,7 +186,7 @@ export default {
       copied: false,
       customCopied: false, // New variable for custom alias copy state
       error: '',
-      systemDomain: 'http://localhost:8000', // Fixed system domain - matches your Ocelot Gateway
+              systemDomain: 'http://localhost:8000', // API Gateway URL
       urlAPI
     }
   },

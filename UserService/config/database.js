@@ -11,7 +11,7 @@ const pool = new Pool({
 const connectDB = async () => {
   try {
     const client = await pool.connect();
-    console.log('✅ Connected to PostgreSQL database');
+    console.log('Connected to PostgreSQL database');
     
     // Create users table if it doesn't exist
     await client.query(`
@@ -36,10 +36,10 @@ const connectDB = async () => {
       );
     `);
     
-    console.log('✅ Users and URL history tables ready');
+    console.log('Users and URL history tables ready');
     client.release();
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('Database connection failed:', error);
     throw error;
   }
 };
