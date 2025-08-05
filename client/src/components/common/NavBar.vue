@@ -27,6 +27,14 @@
             >
               About
             </RouterLink>
+            <RouterLink
+              to="/history"
+              class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              active-class="text-blue-600 bg-blue-50"
+              v-if="user"
+            >
+              History
+            </RouterLink>
           </div>
         </div>
 

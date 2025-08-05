@@ -172,6 +172,8 @@
 </template>
 
 <script>
+import { urlAPI } from '../utils/api'
+
 export default {
   name: 'HomePage',
   data() {
@@ -184,7 +186,8 @@ export default {
       copied: false,
       customCopied: false, // New variable for custom alias copy state
       error: '',
-      systemDomain: 'http://localhost:8000' // Fixed system domain - matches your Ocelot Gateway
+      systemDomain: 'http://localhost:8000', // Fixed system domain - matches your Ocelot Gateway
+      urlAPI
     }
   },
   methods: {
@@ -199,27 +202,23 @@ export default {
       this.shortUrl = ''
 
       try {
-        // Call your URL shortening API through Ocelot Gateway
-        const response = await fetch('http://localhost:8000/shorten', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            longUrl: this.longUrl
-          })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to shorten URL')
+        // Get user info for history tracking
+        const user = JSON.parse(localStorage.getItem('user') || 'null')
+        const requestData = {
+          longUrl: this.longUrl
+        }
+        
+        // Add userId if user is logged in
+        if (user && user.id) {
+          requestData.userId = user.id
         }
 
-        const data = await response.json()
-        this.shortUrl = data.short_url ? `${this.systemDomain}/${data.short_url}` : data.shortUrl
+        const response = await this.urlAPI.shorten(requestData)
+        this.shortUrl = response.data.short_url ? `${this.systemDomain}/${response.data.short_url}` : response.data.shortUrl
 
       } catch (error) {
         console.error('Error shortening URL:', error)
-        this.error = 'Failed to shorten URL. Please try again.'
+        this.error = error.response?.data || 'Failed to shorten URL. Please try again.'
       } finally {
         this.isLoading = false
       }
@@ -287,28 +286,24 @@ export default {
       this.customShortUrl = ''
 
       try {
-        // Call your URL shortening API with custom alias through Ocelot Gateway
-        const response = await fetch('http://localhost:8000/shorten', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            longUrl: this.longUrl,
-            customAlias: this.customAlias
-          })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to shorten URL')
+        // Get user info for history tracking
+        const user = JSON.parse(localStorage.getItem('user') || 'null')
+        const requestData = {
+          longUrl: this.longUrl,
+          customAlias: this.customAlias
+        }
+        
+        // Add userId if user is logged in
+        if (user && user.id) {
+          requestData.userId = user.id
         }
 
-        await response.json() // Consume the response
+        const response = await this.urlAPI.shorten(requestData)
         this.customShortUrl = `${this.systemDomain}/${this.customAlias}`
 
       } catch (error) {
         console.error('Error shortening URL:', error)
-        this.error = 'Failed to shorten URL. Please try again or choose a different alias.'
+        this.error = error.response?.data || 'Failed to shorten URL. Please try again or choose a different alias.'
       } finally {
         this.isLoading = false
       }

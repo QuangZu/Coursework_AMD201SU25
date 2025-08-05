@@ -82,6 +82,8 @@
 </template>
 
 <script>
+import { authAPI } from '../utils/api'
+
 export default {
   name: 'LoginPage',
   data() {
@@ -104,20 +106,14 @@ export default {
       this.success = ''
 
       try {
-        const endpoint = this.showRegister ? '/user/register' : '/user/login'
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.form)
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.error || 'An error occurred')
+        let response
+        if (this.showRegister) {
+          response = await authAPI.register(this.form)
+        } else {
+          response = await authAPI.login(this.form)
         }
+
+        const data = response.data
 
         // Store token and user info
         localStorage.setItem('token', data.token)
@@ -134,7 +130,7 @@ export default {
         }, 1500)
 
       } catch (error) {
-        this.error = error.message
+        this.error = error.response?.data?.error || error.message || 'An error occurred'
       } finally {
         this.isLoading = false
       }
